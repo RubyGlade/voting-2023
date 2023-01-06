@@ -18,6 +18,7 @@
   "homepage": "https://github.com/RubyGlade/voting-2023#readme",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "ethers": "^5.7.2",
     "hardhat": "^2.12.5"
   }
 }
