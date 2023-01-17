@@ -26,7 +26,7 @@ contract InElection is PreElection {
         return result;
     }
 
-    function addVote(bytes16[] calldata votecode) public onlyNode {
+    function addVote(bytes16[] calldata votecode) public onlyNode electionStarted{
         for (uint i=0; i< votecode.length; i++) {
             bytes16 thisPollCode = votecode[i];
             // central poll

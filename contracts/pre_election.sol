@@ -8,8 +8,8 @@ contract PreElection {
 
     // @storage struct of a Poll
     // bytes8[] candidates is an array of roll numbers
-    // bytes8[] votes is the array of voter responses 
-    // ex: 312 in the array means the 1st roll no in candidates is given 3rd pref, 2nd roll no is given 1st pref, 3rd roll no is given 2nd pref
+    // uint256[] votes is the array of voter responses 
+    // ex: 312 in the array means the 3rd roll no in candidates is given 1st pref, 1st roll no is given 2nd pref, 2nd roll no is given 3rd pref
     struct PollStruct {
         uint256 abstainedVotes; // default 0
         uint256 rejectedVotes; // default 0
@@ -25,9 +25,9 @@ contract PreElection {
     mapping(address => bool) public nodeExists;
     
     // @storage the main storage structure which consists of PollStruct inside
-    mapping (bytes4 => PollStruct) departmentPolls;
-    mapping (bytes2 => PollStruct) centralPolls;
-    mapping (bytes4 => PollStruct) hostelPolls;
+    mapping (bytes4 => PollStruct) public departmentPolls;
+    mapping (bytes2 => PollStruct) public centralPolls;
+    mapping (bytes4 => PollStruct) public hostelPolls;
 
     // @func add new poll to mapping
     // @dev has to be hardcoded into contract itself, can't name variable after func arg
@@ -65,14 +65,36 @@ contract PreElection {
         _;
     }
 
-    constructor() public {
-        admin = msg.sender;
-    }
-
     // @func adding a new node to the list of nodes, for setting up a new device
     // @param address of the new node
     function addNode(address _node) public onlyAdmin {
         nodes.push(_node);
         nodeExists[_node] = true;
+    }
+
+    constructor() public {
+        admin = msg.sender;
+    }
+    
+    bool start = false;
+    // @func to start election process
+    function startElection() public onlyAdmin {
+        start = true;
+    }
+
+    modifier electionStarted {
+        require (start == true, "Vote not registered since election hasn't started yet");
+        _;
+    }
+
+    bool end = false;
+    // @func to end election process
+    function endElection() public onlyAdmin {
+        end = true;
+    }
+
+    modifier electionEnded {
+        require (end == true, "Vote not registered since election is ended");
+        _;
     }
 }
