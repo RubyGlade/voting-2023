@@ -34,23 +34,26 @@ contract PreElection {
     // @dev write some script to hardcode this into the contract
     function setPoll() public onlyAdmin {
         // creating Academic Affairs Sec centralPoll with 3 candidates and adding it to mapping
-        PollStruct memory AA;
-        AA.noOfCandidates = 3;
-        AA.candidates[0] = "NA20B007";
-        AA.candidates[1] = "NA20B016";
-        AA.candidates[2] = "NA20B020";
-        centralPolls["AA"] = AA;
+        PollStruct memory CO;
+        CO.noOfCandidates = 3;
+        CO.candidates[0] = "MM20B056";
+        CO.candidates[1] = "PH20B009";
+        CO.candidates[2] = "ME20B109";
+        centralPolls["CO"] = CO;
 
-        // creating Health and Hygiene Sec hostelPoll with 2 candidates and adding it to mapping
+        // creating Health and Hygiene Sec hostelPoll with 3 candidates and adding it to mapping
         PollStruct memory AKHH;
         AKHH.candidates[0] = "NA20B007";
         AKHH.candidates[1] = "NA20B016";
+        AKHH.candidates[2] = "ME20B020";
         hostelPolls["AKHH"] = AKHH;
         
-        // creating CS department legislator for B.Tech with 1 candidate (unanimous)
-        PollStruct memory CSBT;
-        CSBT.candidates[0] = "CS20B009";
-        departmentPolls["CSBT"] = CSBT;
+        // creating CHBT department legislator for B.Tech with 3 candidate 
+        PollStruct memory CHBT;
+        CHBT.candidates[0] = "CH20B091"; 
+        CHBT.candidates[1] = "CH20B067";
+        CHBT.candidates[2] = "CH20B023";
+        departmentPolls["CHBT"] = CHBT;
     }
 
     // @mod admin functions

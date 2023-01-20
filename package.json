@@ -20,5 +20,8 @@
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
     "ethers": "^5.7.2",
     "hardhat": "^2.12.5"
+  },
+  "dependencies": {
+    "prompt-sync": "^4.2.0"
   }
 }

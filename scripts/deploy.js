@@ -7,19 +7,21 @@
 const hre = require("hardhat");
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
 
-  const lockedAmount = hre.ethers.utils.parseEther("1");
+  const PreElection = await hre.ethers.getContractFactory("PreElection");
+  const preElection = await PreElection.deploy();
+  await preElection.deployed();
 
-  const Lock = await hre.ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+  const InElection = await hre.ethers.getContractFactory("InElection");
+  const inElection = await InElection.deploy();
+  await inElection.deployed();
 
-  await lock.deployed();
+  const PostElection = await hre.ethers.getContractFactory("PostElection");
+  const postElection = await PostElection.deploy();
+  await postElection.deployed();
 
   console.log(
-    `Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
+    `Pre_election deployed at address ${preElection.address} \n In_election deployed at address ${inElection.address} \n Post_election deployed at address ${postElection.address}`
   );
 }
 
@@ -29,3 +31,7 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+
+// Pre_election deployed at address 0x9936A4Df0eF78A0244d785250B67fB01fd5C71d8 
+// In_election deployed at address 0x7aac912e0Ea458C95E95B6db861492792dD3f4f0 
+// Post_election deployed at address 0x9E2bbe00a67B04B2DB497000F911F006B3709E0F
