@@ -1,12 +1,28 @@
 const { ethers } = require("ethers");
 const fs = require("fs");
 
+function stringToBytes2(str) {
+    // convert the string to bytes
+    const bytes = ethers.utils.toUtf8Bytes(str);
+    // extract the first 2 bytes
+    const bytes2 = ethers.utils.hexDataSlice(bytes, 0, 2);
+    return bytes2;
+}
+
+function stringToBytes4(str) {
+    // convert the string to bytes
+    const bytes = ethers.utils.toUtf8Bytes(str);
+    // extract the first 2 bytes
+    const bytes4 = ethers.utils.hexDataSlice(bytes, 0, 4);
+    return bytes4;
+}
+
 const main = async () => {
 
     let contractAddresses = JSON.parse(fs.readFileSync('../ContractAddresses.json'));
     let INFURA_ID = '80f66721ab284276b1faeb59e5b83e46';
     let provider = new ethers.providers.JsonRpcProvider(`https://goerli.infura.io/v3/${INFURA_ID}`)
-    let adminPrivateKey = "0x25a1335874be70669269b861e513a212b1633db72a7c1400870aa27dfbbc1dc8";
+    let adminPrivateKey = "a0caae6924e5926393c23d9826ccfbbb07b81e1ece9654c7ef062ce995af6bea";
     let adminWallet = new ethers.Wallet(adminPrivateKey, provider);
     let gasPrice= await provider.getGasPrice();
     let gasLimit = 2500000;
@@ -31,24 +47,17 @@ const main = async () => {
     ]
     const PreElectionContract = new ethers.Contract(PreElectionAddress, PreElectionABI, adminWallet);
 
-    // Trial for adding votes
+    // view functions for verification
 
-    // transaction for addVote function
-    nonce = await provider.getTransactionCount(adminWallet.address);
-    let addVoteData = ElectionInterface.encodeFunctionData("addVote", [[ethers.utils.formatBytes32String("1AA10000"), ethers.utils.formatBytes32String("2AKHH00312")]]);
+    const hostelPollVotes = await ElectionContract.getHostelPollVotes(stringToBytes4("AKHH"));
+    console.log(hostelPollVotes.map(x => x.toNumber()))
+    const hostelPollDetails = await ElectionContract.getHostelPollDetails(stringToBytes4("AKHH"));
+    console.log(hostelPollDetails.map(x => x.toNumber()));
 
-    const addVoteTx = {
-        to: ElectionAddress,
-        nonce: nonce,
-        gasPrice: gasPrice,
-        gasLimit: gasLimit,
-        data: addVoteData,
-        chainId: 5
-    }
-
-    let addVoteSentTx = await adminWallet.sendTransaction(addVoteTx);
-    await addVoteSentTx.wait(1);
-    console.log(addVoteSentTx, "\n");
+    const centralPollVotes = await ElectionContract.getCentralPollVotes(stringToBytes2("AA"));
+    console.log(centralPollVotes.map(x => x.toNumber()))
+    const centralPollDetails = await ElectionContract.getCentralPollDetails(stringToBytes2("AA"));
+    console.log(centralPollDetails.map(x => x.toNumber()));
 
 }
 

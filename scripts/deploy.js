@@ -5,6 +5,9 @@
 // will compile your contracts, add the Hardhat Runtime Environment's members to the
 // global scope, and execute the script.
 const hre = require("hardhat");
+const fs = require("fs");
+
+let contractAddresses = {};
 
 async function main() {
 
@@ -12,17 +15,52 @@ async function main() {
   const preElection = await PreElection.deploy();
   await preElection.deployed();
 
-  const InElection = await hre.ethers.getContractFactory("InElection");
-  const inElection = await InElection.deploy();
-  await inElection.deployed();
+  const AddHostelPollsA = await hre.ethers.getContractFactory("AddHostelPollsA");
+  const addHostelPollsA = await AddHostelPollsA.deploy();
+  await addHostelPollsA.deployed();
 
-  const PostElection = await hre.ethers.getContractFactory("PostElection");
-  const postElection = await PostElection.deploy();
-  await postElection.deployed();
+  const AddHostelPollsB = await hre.ethers.getContractFactory("AddHostelPollsB");
+  const addHostelPollsB = await AddHostelPollsB.deploy();
+  await addHostelPollsB.deployed();
+
+  const AddHostelPollsC = await hre.ethers.getContractFactory("AddHostelPollsC");
+  const addHostelPollsC = await AddHostelPollsC.deploy();
+  await addHostelPollsC.deployed();
+
+  const AddHostelPollsD = await hre.ethers.getContractFactory("AddHostelPollsD");
+  const addHostelPollsD = await AddHostelPollsD.deploy();
+  await addHostelPollsD.deployed();
+
+  const AddOtherPolls = await hre.ethers.getContractFactory("AddOtherPolls");
+  const addOtherPolls = await AddOtherPolls.deploy();
+  await addOtherPolls.deployed();
+
+  const Election = await hre.ethers.getContractFactory("Election");
+  const election = await Election.deploy();
+  await election.deployed();
+
 
   console.log(
-    `Pre_election deployed at address ${preElection.address} \n In_election deployed at address ${inElection.address} \n Post_election deployed at address ${postElection.address}`
+    `\n
+    Pre_election deployed at address ${preElection.address} \n 
+    AddHostelPollsA deployed at address ${addHostelPollsA.address} \n 
+    AddHostelPollsB deployed at address ${addHostelPollsB.address} \n
+    AddHostelPollsC deployed at address ${addHostelPollsC.address} \n 
+    AddHostelPollsD deployed at address ${addHostelPollsD.address} \n
+    AddOtherPolls deployed at address ${addOtherPolls.address} \n
+    Election deployed at address ${election.address} \n`
   );
+  contractAddresses["PreElection"] = preElection.address;
+  contractAddresses["AddHostelPollsA"] = addHostelPollsA.address;
+  contractAddresses["AddHostelPollsB"] = addHostelPollsB.address;
+  contractAddresses["AddHostelPollsC"] = addHostelPollsC.address;
+  contractAddresses["AddHostelPollsD"] = addHostelPollsD.address;
+  contractAddresses["AddOtherPolls"] = addOtherPolls.address;
+  contractAddresses["Election"] = election.address;
+
+  var ContractAddresses = JSON.stringify(contractAddresses);
+  fs.writeFileSync("ContractAddresses.json", ContractAddresses);
+  console.log(contractAddresses)
 }
 
 // We recommend this pattern to be able to use async/await everywhere
@@ -31,7 +69,3 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
-
-// Pre_election deployed at address 0x9936A4Df0eF78A0244d785250B67fB01fd5C71d8 
-// In_election deployed at address 0x7aac912e0Ea458C95E95B6db861492792dD3f4f0 
-// Post_election deployed at address 0x9E2bbe00a67B04B2DB497000F911F006B3709E0F
